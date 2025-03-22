@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model App {
+  id        String   @id @default(cuid()) @map("id")
+  appId     String   @unique @map("app_id")
+  apiKey    String   @unique @map("api_key")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
+  @@map("apps")
+}
+
+model F107DailyAveraged {
+  id        String   @id @default(cuid()) @map("id")
+  date      DateTime @unique @map("date") @db.Date()
+  f107      Float    @map("f107")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
+  @@map("f107s_daily_averaged")
+}
+
+model Station {
+  id             String          @id @default(cuid()) @map("id")
+  code           String          @unique @map("code") // 4 letter code
+  igsCode        String          @unique @map("igs_code") // IGS new format code
+  latitude       Float           @map("latitude")
+  longitude      Float           @map("longitude")
+  elevation      Float           @map("elevation")
+  city           String          @map("city")
+  country        String          @map("country")
+  agency         String          @map("agency")
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt      DateTime        @updatedAt @map("updated_at") @db.Timestamptz()
+  stationRegions StationRegion[]
+  cmns           Cmn[]
+  Std            Std[]
+
+  @@map("stations")
+}
+
+model Region {
+  id             String          @id @default(cuid()) @map("id")
+  name           String          @unique @map("name")
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt      DateTime        @updatedAt @map("updated_at") @db.Timestamptz()
+  regionStations StationRegion[]
+
+  @@map("regions")
+}
+
+model StationRegion {
+  station   Station  @relation(fields: [stationId], references: [id])
+  stationId String   @map("station_id")
+  region    Region   @relation(fields: [regionId], references: [id])
+  regionId  String   @map("region_id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
+  @@id([stationId, regionId])
+  @@map("stations_regions")
+}
+
+model Cmn {
+  id        String   @id @default(cuid()) @map("id")
+  station   Station  @relation(fields: [stationId], references: [id])
+  stationId String   @map("station_id")
+  datetime  DateTime @map("datetime") @db.Timestamptz()
+  prn       Int      @map("prn")
+  azimuth   Float    @map("azimuth")
+  elevation Float    @map("elevation")
+  latitude  Float    @map("latitude")
+  longitude Float    @map("longitude")
+  stec      Float    @map("stec")
+  vtec      Float    @map("vtec")
+  s4        Float?   @map("s4")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
+  @@unique([datetime, prn, stationId])
+  @@map("cmns")
+}
+
+model Std {
+  id                String   @id @default(cuid()) @map("id")
+  station           Station  @relation(fields: [stationId], references: [id])
+  stationId         String   @map("station_id")
+  datetime          DateTime @map("datetime") @db.Timestamptz()
+  meanTec           Float    @map("mean_tec")
+  standardDeviation Float    @map("standard_deviation")
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
+  @@unique([datetime, stationId])
+  @@map("stds")
+}

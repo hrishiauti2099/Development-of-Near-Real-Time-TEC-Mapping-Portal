@@ -1,0 +1,51 @@
+{
+  "name": "prisma-schema",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/prisma-schema/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project prisma-schema --web",
+  "targets": {
+    "deploy": {
+      "executor": "@nx-tools/nx-prisma:deploy"
+    },
+    "format": {
+      "executor": "@nx-tools/nx-prisma:format"
+    },
+    "generate": {
+      "executor": "@nx-tools/nx-prisma:generate"
+    },
+    "migrate": {
+      "executor": "@nx-tools/nx-prisma:migrate"
+    },
+    "pull": {
+      "executor": "@nx-tools/nx-prisma:pull"
+    },
+    "push": {
+      "executor": "@nx-tools/nx-prisma:push"
+    },
+    "reset": {
+      "executor": "@nx-tools/nx-prisma:reset"
+    },
+    "resolve": {
+      "executor": "@nx-tools/nx-prisma:resolve"
+    },
+    "seed": {
+      "executor": "@nx-tools/nx-prisma:seed",
+      "options": {
+        "tsConfig": "libs/prisma-schema/tsconfig.lib.json",
+        "script": "libs/prisma-schema/prisma/seed.ts",
+        "schema": "libs/prisma-schema/prisma/schema.prisma"
+      }
+    },
+    "status": {
+      "executor": "@nx-tools/nx-prisma:status"
+    },
+    "studio": {
+      "executor": "@nx-tools/nx-prisma:studio"
+    },
+    "validate": {
+      "executor": "@nx-tools/nx-prisma:validate"
+    }
+  }
+}

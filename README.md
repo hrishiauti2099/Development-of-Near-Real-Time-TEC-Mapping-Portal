@@ -23,3 +23,7 @@ npx nx run-many -t <target1> <target2>
 
 npx nx run-many -t <target1> <target2> -p <proj1> <proj2>
 Targets can be defined in the package.json or projects.json. Learn more in the docs.
+
+## 🛰️ TEC Mapping System UI
+
+![TEC Mapping](https://raw.githubusercontent.com/hrishiauti2099/Project_Images/main/TEC_MAGE.jpg)
